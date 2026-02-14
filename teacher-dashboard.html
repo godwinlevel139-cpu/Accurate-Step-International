@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Accurate Step International School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="school-logo-small">AS</div>
+                <h3>Teacher Portal</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="overview">
+                    <span class="icon">📊</span><span>Overview</span>
+                </a>
+                <a href="#" class="nav-item" data-section="upload-notes">
+                    <span class="icon">📚</span><span>Upload Notes</span>
+                </a>
+                <a href="#" class="nav-item" data-section="upload-videos">
+                    <span class="icon">🎥</span><span>Upload Videos</span>
+                </a>
+                <a href="#" class="nav-item" data-section="assessments">
+                    <span class="icon">📝</span><span>Assessments</span>
+                </a>
+                <a href="#" class="nav-item" data-section="results">
+                    <span class="icon">📊</span><span>Record Results</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">
+                    <span class="icon">🚪</span><span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <h1 id="pageTitle">Teacher Dashboard</h1>
+                    <p id="pageSubtitle">Manage your classes and content</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <div class="user-avatar">T</div>
+                        <div>
+                            <div class="user-name" id="userName">Loading...</div>
+                            <div class="user-role">Teacher</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <section id="overview-section" class="content-section active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">📚</div>
+                            <div class="stat-info">
+                                <h3 id="notesUploaded">0</h3>
+                                <p>Notes Uploaded</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c);">🎥</div>
+                            <div class="stat-info">
+                                <h3 id="videosUploaded">0</h3>
+                                <p>Videos Uploaded</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">📝</div>
+                            <div class="stat-info">
+                                <h3 id="mySubjects">0</h3>
+                                <p>Subjects Teaching</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>My Subjects</h3>
+                        <div id="subjectsList"></div>
+                    </div>
+                </section>
+
+                <section id="upload-notes-section" class="content-section">
+                    <div class="card">
+                        <h3>Upload Lesson Notes</h3>
+                        <form id="uploadNotesForm" style="background: var(--light); padding: 1.5rem; border-radius: 10px;">
+                            <div class="form-group">
+                                <label>Subject</label>
+                                <select id="noteSubject" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Class</label>
+                                <select id="noteClass" required>
+                                    <option value="">Select Class</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" id="noteTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Topic</label>
+                                <input type="text" id="noteTopic" required>
+                            </div>
+                            <div class="form-group">
+                                <label>File URL (Upload to Google Drive and paste link)</label>
+                                <input type="url" id="noteUrl" placeholder="https://drive.google.com/..." required>
+                                <small style="color: var(--gray); display: block; margin-top: 0.5rem;">
+                                    Upload your PDF/DOCX to Google Drive, make it public, and paste the link here
+                                </small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">📚 Upload Lesson Note</button>
+                        </form>
+                    </div>
+                </section>
+
+                <section id="upload-videos-section" class="content-section">
+                    <div class="card">
+                        <h3>Upload Educational Videos</h3>
+                        <form id="uploadVideosForm" style="background: var(--light); padding: 1.5rem; border-radius: 10px;">
+                            <div class="form-group">
+                                <label>Subject</label>
+                                <select id="videoSubject" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Class</label>
+                                <select id="videoClass" required>
+                                    <option value="">Select Class</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Video Title</label>
+                                <input type="text" id="videoTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Topic</label>
+                                <input type="text" id="videoTopic" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Video URL (YouTube, Google Drive, etc.)</label>
+                                <input type="url" id="videoUrl" placeholder="https://youtube.com/..." required>
+                            </div>
+                            <div class="form-group">
+                                <label>Duration (optional)</label>
+                                <input type="text" id="videoDuration" placeholder="e.g., 15 mins">
+                            </div>
+                            <button type="submit" class="btn btn-primary">🎥 Upload Video</button>
+                        </form>
+                    </div>
+                </section>
+
+                <section id="assessments-section" class="content-section">
+                    <div class="card">
+                        <h3>Create Continuous Assessment</h3>
+                        <form id="createAssessmentForm" style="background: var(--light); padding: 1.5rem; border-radius: 10px;">
+                            <div class="form-group">
+                                <label>Subject</label>
+                                <select id="assessmentSubject" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Class</label>
+                                <select id="assessmentClass" required>
+                                    <option value="">Select Class</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Assessment Title</label>
+                                <input type="text" id="assessmentTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Type</label>
+                                <select id="assessmentType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="Test">Test</option>
+                                    <option value="Assignment">Assignment</option>
+                                    <option value="Quiz">Quiz</option>
+                                    <option value="Project">Project</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Due Date</label>
+                                <input type="date" id="assessmentDueDate" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">📝 Create Assessment</button>
+                        </form>
+                    </div>
+                </section>
+
+                <section id="results-section" class="content-section">
+                    <div class="card">
+                        <h3>Record Student Results</h3>
+                        <p style="color: var(--gray); margin-bottom: 1.5rem;">
+                            Enter student results for continuous assessment and examinations
+                        </p>
+                        <form id="recordResultsForm" style="background: var(--light); padding: 1.5rem; border-radius: 10px;">
+                            <div class="form-group">
+                                <label>Subject</label>
+                                <select id="resultSubject" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Class</label>
+                                <select id="resultClass" required>
+                                    <option value="">Select Class</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Term</label>
+                                <select id="resultTerm" required>
+                                    <option value="First Term">First Term</option>
+                                    <option value="Second Term">Second Term</option>
+                                    <option value="Third Term">Third Term</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Student Admission Number</label>
+                                <input type="text" id="studentAdmission" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Continuous Assessment (CA) - Out of 40</label>
+                                <input type="number" id="caScore" min="0" max="40" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Exam Score - Out of 60</label>
+                                <input type="number" id="examScore" min="0" max="60" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">💾 Save Result</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="school-data.js"></script>
+    <script>
+        if (!sessionStorage.getItem('userType') || sessionStorage.getItem('userType') !== 'teacher') {
+            window.location.href = 'index.html';
+        }
+
+        const teacherId = sessionStorage.getItem('userId');
+        const teacherName = sessionStorage.getItem('userName');
+        const teacherSubjects = JSON.parse(sessionStorage.getItem('userSubjects'));
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('userName').textContent = teacherName;
+            loadOverview();
+            setupNavigation();
+            populateSubjectSelects();
+        });
+
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+                    document.getElementById(this.dataset.section + '-section').classList.add('active');
+                });
+            });
+        }
+
+        function populateSubjectSelects() {
+            const selects = ['noteSubject', 'videoSubject', 'assessmentSubject', 'resultSubject'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                teacherSubjects.forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject;
+                    option.textContent = subject;
+                    select.appendChild(option);
+                });
+            });
+
+            const classSelects = ['noteClass', 'videoClass', 'assessmentClass', 'resultClass'];
+            classSelects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                SchoolData.classes.forEach(cls => {
+                    const option = document.createElement('option');
+                    option.value = cls;
+                    option.textContent = cls;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        function loadOverview() {
+            document.getElementById('mySubjects').textContent = teacherSubjects.length;
+            const notes = SchoolData.lessonNotes.filter(n => teacherSubjects.includes(n.subject));
+            document.getElementById('notesUploaded').textContent = notes.length;
+            const videos = SchoolData.videos.filter(v => teacherSubjects.includes(v.subject));
+            document.getElementById('videosUploaded').textContent = videos.length;
+            document.getElementById('subjectsList').innerHTML = `<ul>${teacherSubjects.map(s => `<li>${s}</li>`).join('')}</ul>`;
+        }
+
+        document.getElementById('uploadNotesForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const note = {
+                id: SchoolData.generateId('NOTE'),
+                teacherId: teacherId,
+                subject: document.getElementById('noteSubject').value,
+                class: document.getElementById('noteClass').value,
+                title: document.getElementById('noteTitle').value,
+                topic: document.getElementById('noteTopic').value,
+                url: document.getElementById('noteUrl').value,
+                date: new Date().toISOString()
+            };
+            SchoolData.addLessonNote(note);
+            alert('Lesson note uploaded successfully!');
+            this.reset();
+            loadOverview();
+        });
+
+        document.getElementById('uploadVideosForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const video = {
+                id: SchoolData.generateId('VID'),
+                teacherId: teacherId,
+                subject: document.getElementById('videoSubject').value,
+                class: document.getElementById('videoClass').value,
+                title: document.getElementById('videoTitle').value,
+                topic: document.getElementById('videoTopic').value,
+                url: document.getElementById('videoUrl').value,
+                duration: document.getElementById('videoDuration').value,
+                date: new Date().toISOString()
+            };
+            SchoolData.addVideo(video);
+            alert('Video uploaded successfully!');
+            this.reset();
+            loadOverview();
+        });
+
+        document.getElementById('createAssessmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const assessment = {
+                id: SchoolData.generateId('ASS'),
+                teacherId: teacherId,
+                subject: document.getElementById('assessmentSubject').value,
+                class: document.getElementById('assessmentClass').value,
+                title: document.getElementById('assessmentTitle').value,
+                type: document.getElementById('assessmentType').value,
+                dueDate: document.getElementById('assessmentDueDate').value,
+                date: new Date().toISOString()
+            };
+            SchoolData.addAssessment(assessment);
+            alert('Assessment created successfully!');
+            this.reset();
+        });
+
+        document.getElementById('recordResultsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const admission = document.getElementById('studentAdmission').value;
+            const student = SchoolData.students.find(s => s.admissionNumber === admission);
+            if (!student) {
+                alert('Student not found with that admission number!');
+                return;
+            }
+            const ca = parseInt(document.getElementById('caScore').value);
+            const exam = parseInt(document.getElementById('examScore').value);
+            const total = ca + exam;
+            let grade, remark;
+            if (total >= 70) { grade = 'A'; remark = 'Excellent'; }
+            else if (total >= 60) { grade = 'B'; remark = 'Very Good'; }
+            else if (total >= 50) { grade = 'C'; remark = 'Good'; }
+            else if (total >= 40) { grade = 'D'; remark = 'Pass'; }
+            else { grade = 'F'; remark = 'Fail'; }
+
+            const result = {
+                id: SchoolData.generateId('RES'),
+                studentId: student.id,
+                subject: document.getElementById('resultSubject').value,
+                class: document.getElementById('resultClass').value,
+                term: document.getElementById('resultTerm').value,
+                session: SchoolData.getCurrentSession(),
+                ca: ca,
+                exam: exam,
+                total: total,
+                grade: grade,
+                remark: remark,
+                teacherId: teacherId,
+                date: new Date().toISOString()
+            };
+            SchoolData.addResult(result);
+            alert(`Result saved successfully!\n\nStudent: ${student.name}\nTotal: ${total}/100\nGrade: ${grade}`);
+            this.reset();
+        });
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

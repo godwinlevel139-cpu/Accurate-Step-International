@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard - Accurate Step International School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="school-logo-small">AS</div>
+                <h3>Parent Portal</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="overview">
+                    <span class="icon">📊</span><span>Overview</span>
+                </a>
+                <a href="#" class="nav-item" data-section="performance">
+                    <span class="icon">📈</span><span>Child's Performance</span>
+                </a>
+                <a href="#" class="nav-item" data-section="fees">
+                    <span class="icon">💳</span><span>Pay Fees</span>
+                </a>
+                <a href="#" class="nav-item" data-section="payments">
+                    <span class="icon">📜</span><span>Payment History</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">
+                    <span class="icon">🚪</span><span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <h1 id="pageTitle">Parent Dashboard</h1>
+                    <p id="pageSubtitle">Monitor your child's progress</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <div class="user-avatar">P</div>
+                        <div>
+                            <div class="user-name" id="userName">Loading...</div>
+                            <div class="user-role">Parent</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <section id="overview-section" class="content-section active">
+                    <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-bottom: 2rem;">
+                        <h3 style="color: white;">Your Child</h3>
+                        <h2 id="childName" style="font-size: 2rem; margin: 1rem 0;">Loading...</h2>
+                        <p id="childClass"></p>
+                        <p id="childAdmission"></p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c);">📊</div>
+                            <div class="stat-info">
+                                <h3 id="averageScore">0%</h3>
+                                <p>Average Score</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">✅</div>
+                            <div class="stat-info">
+                                <h3 id="attendance">0%</h3>
+                                <p>Attendance</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">💰</div>
+                            <div class="stat-info">
+                                <h3 id="feesPaid">₦0</h3>
+                                <p>Fees Paid This Session</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="performance-section" class="content-section">
+                    <div class="card">
+                        <h3>Academic Performance</h3>
+                        <div class="filter-bar">
+                            <select id="termFilter" class="form-control">
+                                <option value="First Term">First Term</option>
+                                <option value="Second Term">Second Term</option>
+                                <option value="Third Term">Third Term</option>
+                            </select>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>CA (40)</th>
+                                    <th>Exam (60)</th>
+                                    <th>Total (100)</th>
+                                    <th>Grade</th>
+                                    <th>Remark</th>
+                                </tr>
+                            </thead>
+                            <tbody id="performanceBody">
+                                <tr><td colspan="6" class="empty-state">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="fees-section" class="content-section">
+                    <div class="card">
+                        <h3>💳 Pay School Fees</h3>
+                        <div style="background: var(--light); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                            <p><strong>Current Session:</strong> <span id="currentSession">2024/2025</span></p>
+                            <p><strong>Current Term:</strong> <span id="currentTerm">First Term</span></p>
+                            <p><strong>Amount Due:</strong> <span style="font-size: 1.5rem; color: #1e40af; font-weight: 700;">₦75,000</span></p>
+                        </div>
+                        <button onclick="payWithPaystack()" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                            💳 Pay ₦75,000 with Card
+                        </button>
+                        <p style="text-align: center; margin-top: 1rem; color: var(--gray); font-size: 0.9rem;">
+                            Secured by Paystack | Cards, Bank Transfer, USSD accepted
+                        </p>
+                        <div style="margin-top: 2rem; padding: 1rem; background: #fef3c7; border-radius: 10px;">
+                            <p><strong>💡 Note:</strong> For now, this is a demo. To enable real payments, see the PAYMENT-INTEGRATION-GUIDE.md file.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="payments-section" class="content-section">
+                    <div class="card">
+                        <h3>📜 Payment History</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Term</th>
+                                    <th>Amount</th>
+                                    <th>Reference</th>
+                                    <th>Receipt</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentsBody">
+                                <tr><td colspan="5" class="empty-state">No payments yet</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="school-data.js"></script>
+    <script>
+        if (!sessionStorage.getItem('userType') || sessionStorage.getItem('userType') !== 'parent') {
+            window.location.href = 'index.html';
+        }
+
+        const parentId = sessionStorage.getItem('userId');
+        const parentName = sessionStorage.getItem('userName');
+        const childId = sessionStorage.getItem('childId');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('userName').textContent = parentName;
+            loadChildInfo();
+            loadOverview();
+            setupNavigation();
+            loadPerformance();
+            loadPayments();
+        });
+
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+                    document.getElementById(this.dataset.section + '-section').classList.add('active');
+                });
+            });
+        }
+
+        function loadChildInfo() {
+            const child = SchoolData.getStudentById(childId);
+            if (child) {
+                document.getElementById('childName').textContent = child.name;
+                document.getElementById('childClass').textContent = 'Class: ' + child.class;
+                document.getElementById('childAdmission').textContent = 'Admission Number: ' + child.admissionNumber;
+            }
+        }
+
+        function loadOverview() {
+            const child = SchoolData.getStudentById(childId);
+            if (child) {
+                const results = SchoolData.getStudentResults(childId);
+                if (results.length > 0) {
+                    const average = results.reduce((sum, r) => sum + r.total, 0) / results.length;
+                    document.getElementById('averageScore').textContent = average.toFixed(1) + '%';
+                }
+                document.getElementById('attendance').textContent = (child.attendance || 95) + '%';
+                
+                const payments = SchoolData.getStudentPayments(childId);
+                const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
+                document.getElementById('feesPaid').textContent = '₦' + totalPaid.toLocaleString();
+            }
+        }
+
+        function loadPerformance() {
+            const term = document.getElementById('termFilter').value;
+            const results = SchoolData.getStudentResults(childId).filter(r => r.term === term);
+            const tbody = document.getElementById('performanceBody');
+            
+            if (results.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No results available for this term</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = results.map(result => `
+                <tr>
+                    <td>${result.subject}</td>
+                    <td>${result.ca}</td>
+                    <td>${result.exam}</td>
+                    <td><strong>${result.total}</strong></td>
+                    <td><span class="grade-badge grade-${result.grade}">${result.grade}</span></td>
+                    <td>${result.remark}</td>
+                </tr>
+            `).join('');
+        }
+
+        function loadPayments() {
+            const payments = SchoolData.getStudentPayments(childId);
+            const tbody = document.getElementById('paymentsBody');
+            
+            if (payments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No payments yet</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = payments.map(payment => `
+                <tr>
+                    <td>${new Date(payment.date).toLocaleDateString()}</td>
+                    <td>${payment.term}</td>
+                    <td><strong>₦${payment.amount.toLocaleString()}</strong></td>
+                    <td style="font-family: monospace; font-size: 0.85rem;">${payment.reference}</td>
+                    <td><button onclick="downloadReceipt('${payment.id}')" class="btn btn-secondary btn-small">📥 Download</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function payWithPaystack() {
+            alert('💡 Payment Feature Demo\n\nTo enable real payments:\n1. Read PAYMENT-INTEGRATION-GUIDE.md\n2. Set up Paystack account\n3. Add your API keys\n4. Integration code is ready!\n\nFor now, this creates a demo payment record.');
+            
+            const payment = {
+                id: SchoolData.generateId('PAY'),
+                studentId: childId,
+                parentId: parentId,
+                amount: 75000,
+                reference: 'DEMO-' + Date.now(),
+                status: 'completed',
+                term: SchoolData.getCurrentTerm(),
+                session: SchoolData.getCurrentSession(),
+                date: new Date().toISOString(),
+                paymentMethod: 'Demo Payment'
+            };
+            
+            SchoolData.addPayment(payment);
+            alert('✅ Demo payment created!\n\nReceipt is now available in Payment History.');
+            loadPayments();
+            loadOverview();
+        }
+
+        function downloadReceipt(paymentId) {
+            const payment = SchoolData.payments.find(p => p.id === paymentId);
+            const child = SchoolData.getStudentById(childId);
+            const settings = SchoolData.settings;
+            
+            const receiptHTML = `<!DOCTYPE html>
+<html><head><title>Payment Receipt</title>
+<style>body{font-family:Arial;padding:2rem;max-width:800px;margin:0 auto}.header{text-align:center;border-bottom:3px solid #1e40af;padding-bottom:1rem;margin-bottom:2rem}.header h1{color:#1e40af;margin:0}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:2rem 0}.info-item{padding:0.5rem}.info-item strong{display:block;color:#64748b;font-size:0.9rem}.amount{text-align:center;background:#f8fafc;padding:2rem;border-radius:10px;margin:2rem 0}.amount h2{color:#1e40af;font-size:2.5rem;margin:0}.footer{text-align:center;margin-top:3rem;padding-top:2rem;border-top:1px solid #e2e8f0;color:#64748b}</style>
+</head><body>
+<div class="header"><h1>${settings.schoolName}</h1><p>${settings.address}</p><p>📞 ${settings.phone} | 📧 ${settings.email}</p></div>
+<h2 style="text-align:center;color:#10b981">✓ PAYMENT RECEIPT</h2>
+<div class="info-grid">
+<div class="info-item"><strong>Receipt Number:</strong>${payment.reference}</div>
+<div class="info-item"><strong>Date:</strong>${new Date(payment.date).toLocaleDateString()}</div>
+<div class="info-item"><strong>Student Name:</strong>${child.name}</div>
+<div class="info-item"><strong>Admission Number:</strong>${child.admissionNumber}</div>
+<div class="info-item"><strong>Class:</strong>${child.class}</div>
+<div class="info-item"><strong>Session:</strong>${payment.session}</div>
+<div class="info-item"><strong>Term:</strong>${payment.term}</div>
+<div class="info-item"><strong>Payment Method:</strong>${payment.paymentMethod}</div>
+</div>
+<div class="amount"><p style="margin:0;color:#64748b">Amount Paid</p><h2>₦${payment.amount.toLocaleString()}</h2><p style="margin:0;color:#10b981;font-weight:600">PAID</p></div>
+<div class="footer"><p><strong>Thank you for your payment!</strong></p><p>This is an official receipt. Please keep for your records.</p></div>
+</body></html>`;
+            
+            const printWindow = window.open('', '', 'width=800,height=600');
+            printWindow.document.write(receiptHTML);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        document.getElementById('termFilter').addEventListener('change', loadPerformance);
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>
