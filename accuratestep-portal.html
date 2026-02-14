@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal - Accurate Step International School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3B82F6;
+            --primary-dark: #2563EB;
+            --success: #10B981;
+            --danger: #EF4444;
+            --dark: #0F172A;
+            --gray: #64748B;
+            --border: #E2E8F0;
+            --light: #F8FAFC;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .portal-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 3rem;
+        }
+
+        .portal-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-circle {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), #06B6D4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            color: white;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: var(--light);
+            padding: 0.5rem;
+            border-radius: 12px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 0.875rem;
+            border: none;
+            background: transparent;
+            color: var(--gray);
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        small {
+            display: block;
+            margin-top: 0.5rem;
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1.125rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert.success {
+            background: #D1FAE5;
+            color: #065F46;
+            border: 2px solid #6EE7B7;
+        }
+
+        .alert.error {
+            background: #FEE2E2;
+            color: #991B1B;
+            border: 2px solid #FCA5A5;
+        }
+
+        .alert.active {
+            display: block;
+        }
+
+        .info-box {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .info-box small {
+            color: var(--gray);
+            margin: 0;
+        }
+
+        @media (max-width: 640px) {
+            .portal-container {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <div class="portal-header">
+            <div class="logo-circle">AS</div>
+            <h1>School Portal</h1>
+            <p class="subtitle">Accurate Step International School</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('login')">Login</button>
+            <button class="tab" onclick="switchTab('register')">Register</button>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <!-- Login Form -->
+        <div id="login-section" class="form-section active">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email / Username</label>
+                    <input type="text" id="loginEmail" required placeholder="your.email@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Password / Admission Number</label>
+                    <input type="text" id="loginPassword" required placeholder="Enter your password">
+                    <small>Students: Use admission number | Teachers/Admin/Parents: Use password</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Login</button>
+
+                <div class="info-box">
+                    <small><strong>Default Admin:</strong> admin / Admin@123</small>
+                </div>
+            </form>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-section" class="form-section">
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>I am registering as:</label>
+                    <select id="registerType" required onchange="updateRegisterForm()">
+                        <option value="">-- Select Type --</option>
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="parent">Parent</option>
+                    </select>
+                </div>
+
+                <div id="studentFields" style="display: none;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="studentName">
+                    </div>
+                    <div class="form-group">
+                        <label>Admission Number</label>
+                        <input type="text" id="studentAdmission" placeholder="AS2024XXX">
+                    </div>
+                    <div class="form-group">
+                        <label>Class</label>
+                        <select id="studentClass"></select>
+                    </div>
+                </div>
+
+                <div id="teacherFields" style="display: none;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="teacherName">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="teacherEmail">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="teacherPassword">
+                        <small>Must contain uppercase, lowercase, and number (min 6 characters)</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Subjects (Hold Ctrl/Cmd for multiple)</label>
+                        <select id="teacherSubjects" multiple size="5"></select>
+                    </div>
+                </div>
+
+                <div id="parentFields" style="display: none;">
+                    <div class="form-group">
+                        <label>Parent Name</label>
+                        <input type="text" id="parentName">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="parentEmail">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="parentPhone">
+                    </div>
+                    <div class="form-group">
+                        <label>Child's Admission Number</label>
+                        <input type="text" id="parentChildAdmission" placeholder="AS2024XXX">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="school-data.js"></script>
+    <script>
+        // Auto-open login if #login in URL
+        if (window.location.hash === '#login') {
+            switchTab('login');
+        }
+
+        const classes = ['JSS 1', 'JSS 2 Diamond', 'JSS 2 Silver', 'JSS 3 Crystal', 
+                        'SS 1 Pearl', 'SS 2 Ruby (Science)', 'SS 2 Sapphire (Art & Commercial)', 
+                        'SS 3 Beryl (Science)', 'SS 3 Jasper (Art & Commercial)'];
+        
+        const subjects = ['Mathematics', 'English Language', 'Biology', 'Chemistry', 'Physics', 
+                         'Economics', 'Geography', 'Government', 'Literature', 'Civic Education'];
+
+        // Populate selects
+        const studentClassSelect = document.getElementById('studentClass');
+        const teacherSubjectsSelect = document.getElementById('teacherSubjects');
+        
+        classes.forEach(cls => {
+            const opt = document.createElement('option');
+            opt.value = cls;
+            opt.textContent = cls;
+            studentClassSelect.appendChild(opt);
+        });
+
+        subjects.forEach(sub => {
+            const opt = document.createElement('option');
+            opt.value = sub;
+            opt.textContent = sub;
+            teacherSubjectsSelect.appendChild(opt);
+        });
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('login-section').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('register-section').classList.add('active');
+            }
+            hideAlert();
+        }
+
+        function updateRegisterForm() {
+            const type = document.getElementById('registerType').value;
+            document.getElementById('studentFields').style.display = type === 'student' ? 'block' : 'none';
+            document.getElementById('teacherFields').style.display = type === 'teacher' ? 'block' : 'none';
+            document.getElementById('parentFields').style.display = type === 'parent' ? 'block' : 'none';
+        }
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alertBox');
+            alert.textContent = message;
+            alert.className = `alert ${type} active`;
+        }
+
+        function hideAlert() {
+            document.getElementById('alertBox').classList.remove('active');
+        }
+
+        // UNIFIED LOGIN
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value.toLowerCase();
+            const password = document.getElementById('loginPassword').value;
+            
+            // Check admin
+            if (email === 'admin' && password === 'Admin@123') {
+                sessionStorage.setItem('userType', 'admin');
+                sessionStorage.setItem('userName', 'Administrator');
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+            
+            // Check teacher
+            const teacher = SchoolData.teachers.find(t => 
+                t.email.toLowerCase() === email && t.password === password
+            );
+            if (teacher) {
+                sessionStorage.setItem('userType', 'teacher');
+                sessionStorage.setItem('userId', teacher.id);
+                sessionStorage.setItem('userName', teacher.name);
+                sessionStorage.setItem('userSubjects', JSON.stringify(teacher.subjects));
+                window.location.href = 'teacher-dashboard.html';
+                return;
+            }
+            
+            // Check student
+            const student = SchoolData.students.find(s => 
+                s.name.toLowerCase() === email.toLowerCase() || 
+                s.admissionNumber.toLowerCase() === email.toLowerCase()
+            );
+            if (student && student.admissionNumber === password) {
+                sessionStorage.setItem('userType', 'student');
+                sessionStorage.setItem('userId', student.id);
+                sessionStorage.setItem('userName', student.name);
+                sessionStorage.setItem('userClass', student.class);
+                window.location.href = 'student-dashboard.html';
+                return;
+            }
+            
+            // Check parent
+            const parent = SchoolData.parents.find(p => 
+                p.email.toLowerCase() === email && p.childAdmissionNumber === password
+            );
+            if (parent) {
+                sessionStorage.setItem('userType', 'parent');
+                sessionStorage.setItem('userId', parent.id);
+                sessionStorage.setItem('userName', parent.name);
+                sessionStorage.setItem('childId', parent.childId);
+                window.location.href = 'parent-dashboard.html';
+                return;
+            }
+            
+            showAlert('Invalid credentials. Please check and try again.', 'error');
+        });
+
+        // REGISTER
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const type = document.getElementById('registerType').value;
+            
+            if (type === 'student') {
+                const name = document.getElementById('studentName').value;
+                const admission = document.getElementById('studentAdmission').value;
+                const cls = document.getElementById('studentClass').value;
+                
+                const exists = SchoolData.students.find(s => s.admissionNumber === admission);
+                if (exists) {
+                    showAlert('Admission number already exists!', 'error');
+                    return;
+                }
+                
+                const data = SchoolData.getData();
+                data.students.push({
+                    id: 'STU' + Date.now(),
+                    name: name,
+                    admissionNumber: admission,
+                    class: cls,
+                    password: admission,
+                    subjects: [],
+                    results: [],
+                    attendance: 95,
+                    dateEnrolled: new Date().toISOString().split('T')[0]
+                });
+                localStorage.setItem('schoolData', JSON.stringify(data));
+                
+                showAlert(`Student registered! Login with name: ${name} and password: ${admission}`, 'success');
+                setTimeout(() => switchTab('login'), 2000);
+                
+            } else if (type === 'teacher') {
+                const name = document.getElementById('teacherName').value;
+                const email = document.getElementById('teacherEmail').value;
+                const password = document.getElementById('teacherPassword').value;
+                const subjects = Array.from(document.getElementById('teacherSubjects').selectedOptions).map(o => o.value);
+                
+                if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}/.test(password)) {
+                    showAlert('Password must contain uppercase, lowercase, number (min 6 chars)', 'error');
+                    return;
+                }
+                
+                const data = SchoolData.getData();
+                data.teachers.push({
+                    id: 'TCH' + Date.now(),
+                    name: name,
+                    email: email,
+                    password: password,
+                    subjects: subjects,
+                    dateJoined: new Date().toISOString()
+                });
+                localStorage.setItem('schoolData', JSON.stringify(data));
+                
+                showAlert('Teacher registered! You can now login.', 'success');
+                setTimeout(() => switchTab('login'), 2000);
+                
+            } else if (type === 'parent') {
+                const name = document.getElementById('parentName').value;
+                const email = document.getElementById('parentEmail').value;
+                const phone = document.getElementById('parentPhone').value;
+                const childAdmission = document.getElementById('parentChildAdmission').value;
+                
+                const child = SchoolData.students.find(s => s.admissionNumber === childAdmission);
+                if (!child) {
+                    showAlert('Child admission number not found!', 'error');
+                    return;
+                }
+                
+                const data = SchoolData.getData();
+                data.parents.push({
+                    id: 'PAR' + Date.now(),
+                    name: name,
+                    email: email,
+                    phoneNumber: phone,
+                    childId: child.id,
+                    childAdmissionNumber: childAdmission,
+                    feesPaid: []
+                });
+                localStorage.setItem('schoolData', JSON.stringify(data));
+                
+                showAlert(`Parent registered! Login with email and child admission: ${childAdmission}`, 'success');
+                setTimeout(() => switchTab('login'), 2000);
+            }
+        });
+    </script>
+</body>
+</html>
