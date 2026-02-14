@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accurate Step International School - School Management Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .school-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            font-weight: 800;
+        }
+
+        .school-info h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .school-info p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 3rem;
+            opacity: 0.95;
+        }
+
+        /* Login Portal Cards */
+        .portals-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .portal-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .portal-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+        }
+
+        .portal-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--primary), #667eea);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .portal-card.admin .portal-icon {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+        }
+
+        .portal-card.teacher .portal-icon {
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        .portal-card.student .portal-icon {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
+
+        .portal-card.parent .portal-icon {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+        }
+
+        .portal-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .portal-card p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, var(--primary), #667eea);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(30, 64, 175, 0.4);
+        }
+
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--dark);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .form-actions button {
+            flex: 1;
+            padding: 1rem;
+            font-size: 1rem;
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray);
+            color: white;
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--gray);
+        }
+
+        .toggle-form a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+
+        /* Features Section */
+        .features {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .features h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-item h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .feature-item p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(15, 23, 42, 0.95);
+            color: white;
+            padding: 3rem 2rem 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+        }
+
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .portals-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .alert.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo-section">
+                <div class="school-logo">AS</div>
+                <div class="school-info">
+                    <h1>Accurate Step International School</h1>
+                    <p>Kabusa, Behind Living Faith Church, Abuja</p>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#features">Features</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h2>Welcome to Our School Portal</h2>
+        <p>Access your personalized dashboard and manage your educational journey</p>
+    </section>
+
+    <!-- Login Portals -->
+    <div class="portals-container">
+        <div class="portal-card admin" onclick="openLoginModal('admin')">
+            <div class="portal-icon">👨‍💼</div>
+            <h3>Admin Portal</h3>
+            <p>Manage school operations, upload content, and oversee all activities</p>
+            <button class="btn">Access Admin Portal</button>
+        </div>
+
+        <div class="portal-card teacher" onclick="openLoginModal('teacher')">
+            <div class="portal-icon">👩‍🏫</div>
+            <h3>Teacher Portal</h3>
+            <p>Upload lesson notes, assessments, videos, and manage student results</p>
+            <button class="btn">Access Teacher Portal</button>
+        </div>
+
+        <div class="portal-card student" onclick="openLoginModal('student')">
+            <div class="portal-icon">🎓</div>
+            <h3>Student Portal</h3>
+            <p>View performance, download notes, watch videos, and track progress</p>
+            <button class="btn">Access Student Portal</button>
+        </div>
+
+        <div class="portal-card parent" onclick="openLoginModal('parent')">
+            <div class="portal-icon">👨‍👩‍👧</div>
+            <h3>Parent Portal</h3>
+            <p>Monitor your child's performance and pay school fees online</p>
+            <button class="btn">Access Parent Portal</button>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2>Portal Features</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">📚</div>
+                <h3>Digital Learning</h3>
+                <p>Access lesson notes, videos, and resources anytime, anywhere</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📊</div>
+                <h3>Performance Tracking</h3>
+                <p>Monitor academic progress with detailed analytics and reports</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">💳</div>
+                <h3>Online Payments</h3>
+                <p>Pay school fees securely and download instant receipts</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📸</div>
+                <h3>School Gallery</h3>
+                <p>View photos from excursions, competitions, and practical sessions</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🎥</div>
+                <h3>Video Library</h3>
+                <p>Watch educational videos uploaded by teachers for each subject</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🔔</div>
+                <h3>Real-time Updates</h3>
+                <p>Receive instant notifications about results, events, and announcements</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            
+            <div class="modal-header">
+                <h2 id="modalTitle">Login</h2>
+                <p id="modalSubtitle"></p>
+            </div>
+
+            <div id="alertBox" class="alert"></div>
+
+            <!-- Student Login/Register Forms -->
+            <div id="studentForms" style="display: none;">
+                <form id="studentLoginForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="studentLoginName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Admission Number</label>
+                        <input type="text" id="studentLoginAdmission" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Login</button>
+                    </div>
+                    <div class="toggle-form">
+                        New student? <a href="#" onclick="toggleStudentForm(); return false;">Register here</a>
+                    </div>
+                </form>
+
+                <form id="studentRegisterForm" style="display: none;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="studentRegName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Admission Number</label>
+                        <input type="text" id="studentRegAdmission" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Class</label>
+                        <select id="studentClass" required>
+                            <option value="">Select Class</option>
+                            <option value="JSS 1">JSS 1</option>
+                            <option value="JSS 2 Diamond">JSS 2 Diamond</option>
+                            <option value="JSS 2 Silver">JSS 2 Silver</option>
+                            <option value="JSS 3 Crystal">JSS 3 Crystal</option>
+                            <option value="SS 1 Pearl">SS 1 Pearl</option>
+                            <option value="SS 2 Ruby (Science)">SS 2 Ruby (Science)</option>
+                            <option value="SS 2 Sapphire (Art & Commercial)">SS 2 Sapphire (Art & Commercial)</option>
+                            <option value="SS 3 Beryl (Science)">SS 3 Beryl (Science)</option>
+                            <option value="SS 3 Jasper (Art & Commercial)">SS 3 Jasper (Art & Commercial)</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Register</button>
+                    </div>
+                    <div class="toggle-form">
+                        Already registered? <a href="#" onclick="toggleStudentForm(); return false;">Login here</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Teacher Login/Register Forms -->
+            <div id="teacherForms" style="display: none;">
+                <form id="teacherLoginForm">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="teacherLoginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="teacherLoginPassword" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Login</button>
+                    </div>
+                    <div class="toggle-form">
+                        New teacher? <a href="#" onclick="toggleTeacherForm(); return false;">Register here</a>
+                    </div>
+                </form>
+
+                <form id="teacherRegisterForm" style="display: none;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="teacherRegName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="teacherRegEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Subject(s) Teaching</label>
+                        <select id="teacherSubject" required multiple size="5">
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="English Language">English Language</option>
+                            <option value="Biology">Biology</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Economics">Economics</option>
+                            <option value="Geography">Geography</option>
+                            <option value="Government">Government</option>
+                            <option value="Literature">Literature</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Agricultural Science">Agricultural Science</option>
+                            <option value="Commerce">Commerce</option>
+                            <option value="Accounting">Accounting</option>
+                            <option value="Civic Education">Civic Education</option>
+                        </select>
+                        <small style="color: var(--gray); display: block; margin-top: 0.5rem;">Hold Ctrl/Cmd to select multiple subjects</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="teacherRegPassword" required>
+                        <small style="color: var(--gray); display: block; margin-top: 0.5rem;">Must contain uppercase, lowercase, and number</small>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Register</button>
+                    </div>
+                    <div class="toggle-form">
+                        Already registered? <a href="#" onclick="toggleTeacherForm(); return false;">Login here</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Parent Login Form -->
+            <div id="parentForms" style="display: none;">
+                <form id="parentLoginForm">
+                    <div class="form-group">
+                        <label>Parent Email</label>
+                        <input type="email" id="parentLoginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Child's Admission Number</label>
+                        <input type="text" id="parentChildAdmission" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Login</button>
+                    </div>
+                    <div class="toggle-form">
+                        <small style="color: var(--gray);">Contact school admin to set up parent access</small>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Admin Login Form -->
+            <div id="adminForms" style="display: none;">
+                <form id="adminLoginForm">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="adminUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="adminPassword" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Login to Admin Panel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Accurate Step International School</h4>
+                <p>Excellence in Education</p>
+                <p>📍 Kabusa, Behind Living Faith Church, Abuja</p>
+                <p>📞 +234 XXX XXX XXXX</p>
+                <p>📧 info@accuratestepschool.edu.ng</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#about">About Us</a>
+                <a href="#features">Features</a>
+                <a href="#contact">Contact</a>
+                <a href="#">Admissions</a>
+            </div>
+            <div class="footer-section">
+                <h4>Portal Access</h4>
+                <a href="#" onclick="openLoginModal('admin'); return false;">Admin Login</a>
+                <a href="#" onclick="openLoginModal('teacher'); return false;">Teacher Login</a>
+                <a href="#" onclick="openLoginModal('student'); return false;">Student Login</a>
+                <a href="#" onclick="openLoginModal('parent'); return false;">Parent Login</a>
+            </div>
+            <div class="footer-section">
+                <h4>School Hours</h4>
+                <p>Monday - Friday: 7:30 AM - 3:00 PM</p>
+                <p>Saturday: 8:00 AM - 12:00 PM</p>
+                <p>Sunday: Closed</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Accurate Step International School. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="school-data.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
