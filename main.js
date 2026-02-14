@@ -101,8 +101,9 @@ document.getElementById('studentLoginForm').addEventListener('submit', function(
     const name = document.getElementById('studentLoginName').value;
     const admission = document.getElementById('studentLoginAdmission').value;
     
-    // Get students from database
-    const student = SchoolData.students.find(s => 
+    // Get fresh data from localStorage
+    const data = SchoolData.getData();
+    const student = data.students.find(s => 
         s.name.toLowerCase() === name.toLowerCase() && 
         s.admissionNumber === admission
     );
@@ -130,7 +131,8 @@ document.getElementById('studentRegisterForm').addEventListener('submit', functi
     const studentClass = document.getElementById('studentClass').value;
     
     // Check if already exists
-    const exists = SchoolData.students.find(s => s.admissionNumber === admission);
+    const data = SchoolData.getData();
+    const exists = data.students.find(s => s.admissionNumber === admission);
     
     if (exists) {
         showAlert('This admission number is already registered. Please login instead.', 'error');
@@ -145,15 +147,22 @@ document.getElementById('studentRegisterForm').addEventListener('submit', functi
         class: studentClass,
         password: admission, // Default password is admission number
         canChangePassword: true,
+        email: '',
+        parentEmail: '',
         subjects: getSubjectsByClass(studentClass),
         results: [],
-        attendance: []
+        attendance: 95,
+        dateEnrolled: new Date().toISOString().split('T')[0]
     };
     
-    SchoolData.students.push(newStudent);
-    SchoolData.saveData();
+    // Save to database properly
+    data.students.push(newStudent);
+    localStorage.setItem('schoolData', JSON.stringify(data));
     
-    showAlert('Registration successful! You can now login with your credentials.', 'success');
+    showAlert('Registration successful! You can now login with your name and admission number.', 'success');
+    
+    // Clear form
+    this.reset();
     
     // Switch to login form after 2 seconds
     setTimeout(() => {
@@ -169,7 +178,9 @@ document.getElementById('teacherLoginForm').addEventListener('submit', function(
     const email = document.getElementById('teacherLoginEmail').value;
     const password = document.getElementById('teacherLoginPassword').value;
     
-    const teacher = SchoolData.teachers.find(t => 
+    // Get fresh data from localStorage
+    const data = SchoolData.getData();
+    const teacher = data.teachers.find(t => 
         t.email.toLowerCase() === email.toLowerCase() && 
         t.password === password
     );
@@ -182,7 +193,7 @@ document.getElementById('teacherLoginForm').addEventListener('submit', function(
         
         window.location.href = 'teacher-dashboard.html';
     } else {
-        showAlert('Invalid email or password.', 'error');
+        showAlert('Invalid email or password. Please check your credentials and try again.', 'error');
     }
 });
 
@@ -226,10 +237,15 @@ document.getElementById('teacherRegisterForm').addEventListener('submit', functi
         dateJoined: new Date().toISOString()
     };
     
-    SchoolData.teachers.push(newTeacher);
-    SchoolData.saveData();
+    // Save to database properly
+    const data = SchoolData.getData();
+    data.teachers.push(newTeacher);
+    localStorage.setItem('schoolData', JSON.stringify(data));
     
-    showAlert('Registration successful! You can now login.', 'success');
+    showAlert('Registration successful! You can now login with your email and password.', 'success');
+    
+    // Clear form
+    this.reset();
     
     setTimeout(() => {
         toggleTeacherForm();
@@ -303,3 +319,4 @@ window.onclick = function(event) {
         closeModal();
     }
 }
+
