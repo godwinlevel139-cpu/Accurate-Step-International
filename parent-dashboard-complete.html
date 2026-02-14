@@ -1,0 +1,265 @@
+<!-- Add this to existing parent-dashboard.html after performance section -->
+
+<!-- Fees Payment Section -->
+<section id="fees-section" class="content-section">
+    <div class="card">
+        <h3>💳 Pay School Fees</h3>
+        <p style="color: var(--gray); margin-bottom: 2rem;">Pay your child's school fees securely online</p>
+        
+        <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1)); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+            <h4 style="margin-bottom: 1rem;">Current Term Fees</h4>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <div>
+                    <p style="color: var(--gray); font-size: 0.9rem;">Student</p>
+                    <p style="font-weight: 600;" id="feeStudentName">Loading...</p>
+                </div>
+                <div>
+                    <p style="color: var(--gray); font-size: 0.9rem;">Class</p>
+                    <p style="font-weight: 600;" id="feeClass">Loading...</p>
+                </div>
+                <div>
+                    <p style="color: var(--gray); font-size: 0.9rem;">Term</p>
+                    <p style="font-weight: 600;" id="feeTerm">First Term 2024/2025</p>
+                </div>
+                <div>
+                    <p style="color: var(--gray); font-size: 0.9rem;">Session</p>
+                    <p style="font-weight: 600;">2024/2025</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem; padding: 2rem; background: white; border-radius: 12px;">
+                <p style="color: var(--gray); margin-bottom: 0.5rem;">Amount Due</p>
+                <p style="font-size: 3rem; font-weight: 800; color: var(--primary); margin: 0;">
+                    ₦<span id="feeAmount">50,000</span>
+                </p>
+            </div>
+        </div>
+        
+        <button onclick="initiatePayment()" class="btn btn-primary" style="width: 100%; padding: 1.5rem; font-size: 1.125rem; margin-bottom: 1.5rem;">
+            💳 Pay ₦<span id="payButtonAmount">50,000</span> with Paystack
+        </button>
+        
+        <div style="background: #DBEAFE; padding: 1.5rem; border-radius: 12px; border: 2px solid #3B82F6;">
+            <h4 style="color: #1E40AF; margin-bottom: 0.5rem;">💡 Secure Payment</h4>
+            <p style="color: #1E3A8A; font-size: 0.95rem; margin-bottom: 0.5rem;">
+                Your payment is processed securely through Paystack. We accept:
+            </p>
+            <ul style="color: #1E3A8A; margin-left: 1.5rem; font-size: 0.95rem;">
+                <li>Debit/Credit Cards (Visa, Mastercard, Verve)</li>
+                <li>Bank Transfer</li>
+                <li>USSD</li>
+                <li>Mobile Money (MTN, Airtel)</li>
+            </ul>
+        </div>
+        
+        <div style="background: #FEF3C7; padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem; border: 2px solid #F59E0B;">
+            <p style="color: #92400E; font-size: 0.95rem;">
+                <strong>💡 Demo Mode:</strong> This is currently in demo mode. To enable real payments, 
+                add your Paystack API keys in the code. See PAYMENT-COMPLETE-GUIDE.md for instructions.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Payment History Section -->
+<section id="payments-section" class="content-section">
+    <div class="card">
+        <h3>📜 Payment History</h3>
+        <p style="color: var(--gray); margin-bottom: 1.5rem;">View all your payment records</p>
+        
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Term</th>
+                    <th>Amount</th>
+                    <th>Reference</th>
+                    <th>Status</th>
+                    <th>Receipt</th>
+                </tr>
+            </thead>
+            <tbody id="paymentsTableBody">
+                <tr>
+                    <td colspan="6" class="empty-state">No payments yet</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Add this script section -->
+<script>
+// Fee structure for all classes
+const feeStructure = {
+    'JSS 1': { term1: 45000, term2: 45000, term3: 45000 },
+    'JSS 2 Diamond': { term1: 50000, term2: 50000, term3: 50000 },
+    'JSS 2 Silver': { term1: 50000, term2: 50000, term3: 50000 },
+    'JSS 3 Crystal': { term1: 55000, term2: 55000, term3: 55000 },
+    'SS 1 Pearl': { term1: 60000, term2: 60000, term3: 60000 },
+    'SS 2 Ruby (Science)': { term1: 65000, term2: 65000, term3: 65000 },
+    'SS 2 Sapphire (Art & Commercial)': { term1: 65000, term2: 65000, term3: 65000 },
+    'SS 3 Beryl (Science)': { term1: 70000, term2: 70000, term3: 70000 },
+    'SS 3 Jasper (Art & Commercial)': { term1: 70000, term2: 70000, term3: 70000 }
+};
+
+// Load payment info
+function loadPaymentInfo() {
+    const child = SchoolData.getStudentById(childId);
+    document.getElementById('feeStudentName').textContent = child.name;
+    document.getElementById('feeClass').textContent = child.class;
+    
+    const fees = feeStructure[child.class] || { term1: 50000 };
+    const currentTerm = 'term1';
+    const amount = fees[currentTerm];
+    
+    document.getElementById('feeAmount').textContent = amount.toLocaleString();
+    document.getElementById('payButtonAmount').textContent = amount.toLocaleString();
+}
+
+// Initiate payment
+function initiatePayment() {
+    const child = SchoolData.getStudentById(childId);
+    const amount = parseInt(document.getElementById('feeAmount').textContent.replace(/,/g, ''));
+    
+    // DEMO MODE - Replace with real Paystack integration
+    alert(`💳 Payment Demo\n\nAmount: ₦${amount.toLocaleString()}\nStudent: ${child.name}\n\nIn production, Paystack payment window would open here.\n\nTo enable real payments:\n1. Sign up at paystack.com\n2. Get your public key\n3. Replace this demo code\n\nSee PAYMENT-COMPLETE-GUIDE.md for full instructions.`);
+    
+    // Simulate successful payment
+    if (confirm('Simulate successful payment?')) {
+        savePaymentRecord('DEMO-' + Date.now(), amount, child.name);
+    }
+    
+    /* REAL PAYSTACK CODE - Uncomment when ready:
+    
+    const handler = PaystackPop.setup({
+        key: 'pk_test_YOUR_PUBLIC_KEY', // Replace with your key
+        email: parentEmail,
+        amount: amount * 100,
+        currency: 'NGN',
+        ref: 'AS-' + Math.floor((Math.random() * 1000000000) + 1),
+        metadata: {
+            custom_fields: [
+                {
+                    display_name: "Student Name",
+                    variable_name: "student_name",
+                    value: child.name
+                },
+                {
+                    display_name: "Class",
+                    variable_name: "class",
+                    value: child.class
+                },
+                {
+                    display_name: "Term",
+                    variable_name: "term",
+                    value: "First Term 2024/2025"
+                }
+            ]
+        },
+        callback: function(response) {
+            savePaymentRecord(response.reference, amount, child.name);
+            generateReceipt(response.reference);
+        },
+        onClose: function() {
+            alert('Payment window closed');
+        }
+    });
+    handler.openIframe();
+    */
+}
+
+// Save payment record
+function savePaymentRecord(reference, amount, studentName) {
+    const payment = {
+        id: generateId('PAY'),
+        studentId: childId,
+        parentId: parentId,
+        amount: amount,
+        reference: reference,
+        term: 'First Term',
+        session: '2024/2025',
+        status: 'completed',
+        date: new Date().toISOString(),
+        paymentMethod: 'Paystack'
+    };
+    
+    SchoolData.addPayment(payment);
+    alert('✅ Payment successful!\n\nReference: ' + reference + '\n\nReceipt is being generated...');
+    generateReceipt(reference);
+    loadPaymentHistory();
+}
+
+// Generate receipt
+function generateReceipt(reference) {
+    const child = SchoolData.getStudentById(childId);
+    const payment = SchoolData.payments.find(p => p.reference === reference);
+    
+    const receiptHTML = `<!DOCTYPE html>
+<html><head><title>Payment Receipt</title>
+<style>
+body{font-family:Arial;max-width:800px;margin:40px auto;padding:20px}
+.header{text-align:center;border-bottom:3px solid #3B82F6;padding-bottom:20px;margin-bottom:30px}
+.header h1{color:#3B82F6;margin:0}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:30px 0}
+.info-item{padding:10px}
+.info-item strong{display:block;color:#64748B;font-size:0.9rem}
+.amount{text-align:center;background:#F8FAFC;padding:30px;border-radius:10px;margin:30px 0}
+.amount h2{color:#3B82F6;font-size:3rem;margin:0}
+.footer{text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid #E2E8F0;color:#64748B}
+</style></head><body>
+<div class="header">
+<h1>Accurate Step International School</h1>
+<p>Kabusa, Behind Living Faith Church, Abuja</p>
+<p>📞 +234 XXX XXX XXXX | 📧 info@accuratestepschool.edu.ng</p>
+</div>
+<h2 style="text-align:center;color:#10B981">✓ PAYMENT RECEIPT</h2>
+<div class="info">
+<div class="info-item"><strong>Receipt Number:</strong>${reference}</div>
+<div class="info-item"><strong>Date:</strong>${new Date().toLocaleDateString()}</div>
+<div class="info-item"><strong>Student Name:</strong>${child.name}</div>
+<div class="info-item"><strong>Admission Number:</strong>${child.admissionNumber}</div>
+<div class="info-item"><strong>Class:</strong>${child.class}</div>
+<div class="info-item"><strong>Term:</strong>${payment.term} ${payment.session}</div>
+</div>
+<div class="amount">
+<p style="margin:0;color:#64748B">Amount Paid</p>
+<h2>₦${payment.amount.toLocaleString()}</h2>
+<p style="margin:0;color:#10B981;font-weight:600">PAID IN FULL</p>
+</div>
+<div class="footer">
+<p><strong>Thank you for your payment!</strong></p>
+<p>This is an official receipt. Please keep for your records.</p>
+</div></body></html>`;
+    
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write(receiptHTML);
+    printWindow.document.close();
+    printWindow.print();
+}
+
+// Load payment history
+function loadPaymentHistory() {
+    const payments = SchoolData.getStudentPayments(childId);
+    const tbody = document.getElementById('paymentsTableBody');
+    
+    if (payments.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No payments yet</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = payments.map(p => `
+        <tr>
+            <td>${new Date(p.date).toLocaleDateString()}</td>
+            <td>${p.term} ${p.session}</td>
+            <td><strong>₦${p.amount.toLocaleString()}</strong></td>
+            <td style="font-family:monospace;font-size:0.85rem">${p.reference}</td>
+            <td><span class="grade-badge grade-A">${p.status}</span></td>
+            <td><button onclick="generateReceipt('${p.reference}')" class="btn btn-secondary btn-small">📥 Download</button></td>
+        </tr>
+    `).join('');
+}
+
+// Call on page load
+loadPaymentInfo();
+loadPaymentHistory();
+</script>
